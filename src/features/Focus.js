@@ -8,7 +8,7 @@ import { RoundedButton } from "../components/RoundedButton";
 
 export const Focus = ({ addSubject }) => {
   const [subject, setSubject] = useState("");
-  console.log(subject);
+
   return (
     <View style={styles.container}>
       <Text style={styles.text}>Focus Time App ⌛ </Text>
@@ -34,7 +34,7 @@ export const Focus = ({ addSubject }) => {
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1 },
+  container: {},
   text: {
     fontSize: fontSizes.lg,
     color: colors.pastetDarkPurple,

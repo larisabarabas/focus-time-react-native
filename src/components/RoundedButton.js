@@ -30,6 +30,6 @@ const styles = (size) => ({
   },
   text: {
     color: colors.pastetDarkPurple,
-    fontSize: size / 3,
+    fontSize: size / 4,
   },
 });

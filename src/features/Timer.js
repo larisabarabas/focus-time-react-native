@@ -1,27 +1,46 @@
 import React, { useState } from "react";
-import { View, StyleSheet, Text } from "react-native";
+import { View, StyleSheet, Text, Vibration } from "react-native";
 import { ProgressBar } from "react-native-paper";
+import { useKeepAwake } from "expo-keep-awake";
 import { colors } from "../utils/colors";
 import { Countdown } from "../components/Countdown";
 import { fontSizes, spacing } from "../utils/size";
 import { RoundedButton } from "../components/RoundedButton";
+import { Timing } from "./Timing";
 
-export const Timer = ({ focusSubject }) => {
+const ONE_SECOND_IN_MS = 1000;
+
+const PATTERN = [
+  1 * ONE_SECOND_IN_MS,
+  1 * ONE_SECOND_IN_MS,
+  1 * ONE_SECOND_IN_MS,
+  1 * ONE_SECOND_IN_MS,
+  1 * ONE_SECOND_IN_MS,
+];
+
+export const Timer = ({ focusSubject, clearSubject, onTimerEnd }) => {
+  useKeepAwake();
+
   const [isStarted, setIsStarted] = useState(false);
   const [progress, setProgress] = useState(1);
+  const [minutes, setMinutes] = useState(0.1);
 
-  const handleProgressBar = (progress) => {
-    setProgress(progress);
+  const onEnd = (reset) => {
+    Vibration.vibrate(PATTERN);
+    setIsStarted(false);
+    setProgress(1);
+    reset();
+    onTimerEnd(focusSubject);
   };
+
   return (
     <View style={styles.container}>
       <View style={styles.countdown}>
         <Countdown
-          onProgress={(value) => {
-            setProgress(value);
-          }}
+          minutes={minutes}
+          onProgress={setProgress}
           isPaused={!isStarted}
-          onEnd={() => {}}
+          onEnd={onEnd}
         />
         <View style={{ paddingTop: spacing.xxxl }}>
           <Text style={styles.title}>Focusing on:</Text>
@@ -34,6 +53,9 @@ export const Timer = ({ focusSubject }) => {
           color={colors.pastelPurple}
           style={{ height: spacing.sm }}
         />
+      </View>
+      <View style={styles.timingWrapper}>
+        <Timing onChangeTime={setMinutes} />
       </View>
 
       <View style={styles.buttonWrapper}>
@@ -51,6 +73,9 @@ export const Timer = ({ focusSubject }) => {
             size={100}
           />
         )}
+      </View>
+      <View style={styles.clearWrapper}>
+        <RoundedButton title="-" onPress={clearSubject} size={50} />
       </View>
     </View>
   );
@@ -82,5 +107,14 @@ const styles = StyleSheet.create({
     color: colors.pastetDarkPurple,
     textAlign: "center",
     fontSize: fontSizes.md,
+  },
+  timingWrapper: {
+    flex: 0.1,
+    flexDirection: "row",
+    paddingTop: spacing.xxl,
+  },
+  clearWrapper: {
+    flexDirection: "row",
+    justifyContent: "center",
   },
 });
