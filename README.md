@@ -1,6 +1,6 @@
 ## Focus time App inspired by Pomodoro technique
 
-# Functionalities
+### Functionalities
 
 - Add a task
 - Run a timer for that specific task. When the timer ends the task gets stored in an history list.
